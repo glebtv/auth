@@ -6,12 +6,13 @@ import (
 	"net/http"
 	"reflect"
 
+	"github.com/glebtv/auth"
+	"github.com/glebtv/auth/auth_identity"
+	"github.com/glebtv/auth/claims"
 	"github.com/google/go-github/github"
-	"github.com/qor/auth"
-	"github.com/qor/auth/auth_identity"
-	"github.com/qor/auth/claims"
 	"github.com/qor/qor/utils"
 	"golang.org/x/oauth2"
+	null "gopkg.in/guregu/null.v3"
 )
 
 var (
@@ -105,9 +106,7 @@ func New(config *Config) *GithubProvider {
 					schema.RawInfo = user
 				}
 				if _, userID, err := context.Auth.UserStorer.Save(&schema, context); err == nil {
-					if userID != "" {
-						authInfo.UserID = userID
-					}
+					authInfo.UserID = null.IntFrom(userID)
 				} else {
 					return nil, err
 				}

@@ -4,11 +4,12 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/qor/auth"
-	"github.com/qor/auth/auth_identity"
-	"github.com/qor/auth/claims"
+	"github.com/glebtv/auth"
+	"github.com/glebtv/auth/auth_identity"
+	"github.com/glebtv/auth/claims"
 	"github.com/qor/qor/utils"
 	"github.com/qor/session"
+	null "gopkg.in/guregu/null.v3"
 )
 
 // DefaultAuthorizeHandler default authorize handler
@@ -76,7 +77,9 @@ var DefaultRegisterHandler = func(context *auth.Context) (*claims.Claims, error)
 		schema.Email = authInfo.UID
 		schema.RawInfo = req
 
-		currentUser, authInfo.UserID, err = context.Auth.UserStorer.Save(&schema, context)
+		var uid int64
+		currentUser, uid, err = context.Auth.UserStorer.Save(&schema, context)
+		authInfo.UserID = null.IntFrom(uid)
 		if err != nil {
 			return nil, err
 		}

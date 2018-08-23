@@ -1,18 +1,17 @@
 package auth
 
 import (
-	"fmt"
 	"reflect"
 
+	"github.com/glebtv/auth/auth_identity"
+	"github.com/glebtv/auth/claims"
 	"github.com/jinzhu/copier"
-	"github.com/qor/auth/auth_identity"
-	"github.com/qor/auth/claims"
 	"github.com/qor/qor/utils"
 )
 
 // UserStorerInterface user storer interface
 type UserStorerInterface interface {
-	Save(schema *Schema, context *Context) (user interface{}, userID string, err error)
+	Save(schema *Schema, context *Context) (user interface{}, userID int64, err error)
 	Get(claims *claims.Claims, context *Context) (user interface{}, err error)
 }
 
@@ -25,9 +24,9 @@ func (UserStorer) Get(Claims *claims.Claims, context *Context) (user interface{}
 	var tx = context.Auth.GetDB(context.Request)
 
 	if context.Auth.Config.UserModel != nil {
-		if Claims.UserID != "" {
+		if Claims.UserID.Valid {
 			currentUser := reflect.New(utils.ModelType(context.Auth.Config.UserModel)).Interface()
-			if err = tx.First(currentUser, Claims.UserID).Error; err == nil {
+			if err = tx.First(currentUser, Claims.UserID.Int64).Error; err == nil {
 				return currentUser, nil
 			}
 			return nil, ErrInvalidAccount
@@ -48,7 +47,7 @@ func (UserStorer) Get(Claims *claims.Claims, context *Context) (user interface{}
 				ToClaims() *claims.Claims
 			}); ok {
 				currentUser := reflect.New(utils.ModelType(context.Auth.Config.UserModel)).Interface()
-				if err = tx.First(currentUser, authBasicInfo.ToClaims().UserID).Error; err == nil {
+				if err = tx.First(currentUser, authBasicInfo.ToClaims().UserID.Int64).Error; err == nil {
 					return currentUser, nil
 				}
 				return nil, ErrInvalidAccount
@@ -62,14 +61,14 @@ func (UserStorer) Get(Claims *claims.Claims, context *Context) (user interface{}
 }
 
 // Save defined how to save user
-func (UserStorer) Save(schema *Schema, context *Context) (user interface{}, userID string, err error) {
+func (UserStorer) Save(schema *Schema, context *Context) (user interface{}, userID int64, err error) {
 	var tx = context.Auth.GetDB(context.Request)
 
 	if context.Auth.Config.UserModel != nil {
 		currentUser := reflect.New(utils.ModelType(context.Auth.Config.UserModel)).Interface()
 		copier.Copy(currentUser, schema)
 		err = tx.Create(currentUser).Error
-		return currentUser, fmt.Sprint(tx.NewScope(currentUser).PrimaryKeyValue()), err
+		return currentUser, tx.NewScope(currentUser).PrimaryKeyValue().(int64), err
 	}
-	return nil, "", nil
+	return nil, 0, nil
 }
