@@ -24,9 +24,9 @@ func (UserStorer) Get(Claims *claims.Claims, context *Context) (user interface{}
 	var tx = context.Auth.GetDB(context.Request)
 
 	if context.Auth.Config.UserModel != nil {
-		if Claims.UserID.Valid {
+		if Claims.UserID > 0 {
 			currentUser := reflect.New(utils.ModelType(context.Auth.Config.UserModel)).Interface()
-			if err = tx.First(currentUser, Claims.UserID.Int64).Error; err == nil {
+			if err = tx.First(currentUser, Claims.UserID).Error; err == nil {
 				return currentUser, nil
 			}
 			return nil, ErrInvalidAccount
@@ -47,7 +47,7 @@ func (UserStorer) Get(Claims *claims.Claims, context *Context) (user interface{}
 				ToClaims() *claims.Claims
 			}); ok {
 				currentUser := reflect.New(utils.ModelType(context.Auth.Config.UserModel)).Interface()
-				if err = tx.First(currentUser, authBasicInfo.ToClaims().UserID.Int64).Error; err == nil {
+				if err = tx.First(currentUser, authBasicInfo.ToClaims().UserID).Error; err == nil {
 					return currentUser, nil
 				}
 				return nil, ErrInvalidAccount

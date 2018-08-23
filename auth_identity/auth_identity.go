@@ -36,6 +36,6 @@ func (basic Basic) ToClaims() *claims.Claims {
 	claims := claims.Claims{}
 	claims.Provider = basic.Provider
 	claims.Id = basic.UID
-	claims.UserID = basic.UserID
+	claims.UserID = basic.UserID.Int64
 	return &claims
 }
