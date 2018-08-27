@@ -15,10 +15,10 @@ import (
 
 // Config password config
 type Config struct {
-	Confirmable    bool
-	ConfirmMailer  func(email string, context *auth.Context, claims *claims.Claims, currentUser interface{}) error
-	ConfirmHandler func(*auth.Context) error
-
+	Confirmable            bool
+	ConfirmMailer          func(email string, context *auth.Context, claims *claims.Claims, currentUser interface{}) error
+	ConfirmHandler         func(*auth.Context) error
+	ConfirmSkip            func(context *auth.Context) bool
 	ResetPasswordMailer    func(email string, context *auth.Context, claims *claims.Claims, currentUser interface{}) error
 	ResetPasswordHandler   func(*auth.Context) error
 	RecoverPasswordHandler func(*auth.Context) error
@@ -66,6 +66,10 @@ func New(config *Config) *Provider {
 
 	if config.RegisterHandler == nil {
 		config.RegisterHandler = DefaultRegisterHandler
+	}
+
+	if config.ConfirmSkip == nil {
+		config.ConfirmSkip = func(context *auth.Context) bool { return false }
 	}
 
 	return provider
