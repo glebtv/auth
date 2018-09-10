@@ -16,6 +16,11 @@ import (
 	"github.com/qor/session"
 )
 
+var (
+	// MessageLoggedOut flash message after logout
+	MessageLoggedOut = template.HTML("Logged out.")
+)
+
 func respondAfterLogged(claims *claims.Claims, context *Context) {
 	// login user
 	context.Auth.Login(context.Writer, context.Request, claims)
@@ -37,7 +42,7 @@ var DefaultLoginHandler = func(context *Context, authorize func(*Context) (*clai
 	)
 
 	if err == nil && claims != nil {
-		context.SessionStorer.Flash(w, req, session.Message{Message: "logged"})
+		context.SessionStorer.Flash(w, req, session.Message{Message: MessageLoggedOut})
 		respondAfterLogged(claims, context)
 		return
 	}
