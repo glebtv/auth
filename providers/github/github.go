@@ -12,7 +12,6 @@ import (
 	"github.com/google/go-github/github"
 	"github.com/qor/qor/utils"
 	"golang.org/x/oauth2"
-	null "gopkg.in/guregu/null.v3"
 )
 
 var (
@@ -106,7 +105,7 @@ func New(config *Config) *GithubProvider {
 					schema.RawInfo = user
 				}
 				if _, userID, err := context.Auth.UserStorer.Save(&schema, context); err == nil {
-					authInfo.UserID = null.IntFrom(userID)
+					authInfo.UserID = &userID
 				} else {
 					return nil, err
 				}

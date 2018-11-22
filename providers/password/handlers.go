@@ -10,7 +10,6 @@ import (
 	"github.com/glebtv/auth/claims"
 	"github.com/qor/qor/utils"
 	"github.com/qor/session"
-	null "gopkg.in/guregu/null.v3"
 )
 
 // DefaultAuthorizeHandler default authorize handler
@@ -80,7 +79,7 @@ var DefaultRegisterHandler = func(context *auth.Context) (*claims.Claims, error)
 
 		var uid int64
 		currentUser, uid, err = context.Auth.UserStorer.Save(&schema, context)
-		authInfo.UserID = null.IntFrom(uid)
+		authInfo.UserID = &uid
 		if err != nil {
 			return nil, err
 		}

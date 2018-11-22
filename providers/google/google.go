@@ -13,7 +13,6 @@ import (
 	"github.com/qor/qor/utils"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
-	null "gopkg.in/guregu/null.v3"
 )
 
 var UserInfoURL = "https://www.googleapis.com/oauth2/v3/userinfo"
@@ -115,7 +114,7 @@ func New(config *Config) *GoogleProvider {
 				}
 
 				if _, userID, err := context.Auth.UserStorer.Save(&schema, context); err == nil {
-					authInfo.UserID = null.IntFrom(userID)
+					authInfo.UserID = &userID
 				} else {
 					return nil, err
 				}

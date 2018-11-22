@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/glebtv/auth/claims"
-	null "gopkg.in/guregu/null.v3"
 )
 
 // AuthIdentity auth identity session model
@@ -23,7 +22,7 @@ type Basic struct {
 	Provider          string // phone, email, wechat, github...
 	UID               string `gorm:"column:uid"`
 	EncryptedPassword string
-	UserID            null.Int
+	UserID            *int64
 	ConfirmedAt       *time.Time
 }
 
@@ -36,6 +35,6 @@ func (basic Basic) ToClaims() *claims.Claims {
 	claims := claims.Claims{}
 	claims.Provider = basic.Provider
 	claims.Id = basic.UID
-	claims.UserID = basic.UserID.Int64
+	claims.UserID = *basic.UserID
 	return &claims
 }
