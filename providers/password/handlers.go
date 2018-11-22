@@ -1,6 +1,7 @@
 package password
 
 import (
+	"log"
 	"reflect"
 	"strings"
 
@@ -92,6 +93,10 @@ var DefaultRegisterHandler = func(context *auth.Context) (*claims.Claims, error)
 				if !skip {
 					context.SessionStorer.Flash(context.Writer, req, session.Message{Message: ConfirmFlashMessage, Type: "success"})
 					err = provider.Config.ConfirmMailer(schema.Email, context, authInfo.ToClaims(), currentUser)
+					if err != nil {
+						log.Println("error sending confirmation email", err)
+						err = nil
+					}
 				}
 			}
 
