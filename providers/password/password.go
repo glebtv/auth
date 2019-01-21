@@ -90,7 +90,7 @@ func (provider Provider) ConfigAuth(auth *auth.Auth) {
 	auth.Render.RegisterViewPath("github.com/glebtv/auth/providers/password/views")
 
 	if auth.Mailer != nil {
-		auth.Mailer.RegisterViewPath("github.com/glebtv/auth/providers/password/views/mailers")
+		auth.Mailer.RegisterViewPath("github.com/glebtv/auth/providers/password/views/mailer")
 	}
 }
 
