@@ -1,6 +1,7 @@
 package auth_identity
 
 import (
+	"log"
 	"time"
 
 	"github.com/glebtv/auth/claims"
@@ -8,7 +9,6 @@ import (
 
 // AuthIdentity auth identity session model
 type AuthIdentity struct {
-	ID int64 `gorm:"primary_key" json:"id"`
 	Basic
 	SignLogs
 }
@@ -19,6 +19,7 @@ func (AuthIdentity) TableName() string {
 
 // Basic basic information about auth identity
 type Basic struct {
+	ID                int64  `gorm:"primary_key" json:"id"`
 	Provider          string // phone, email, wechat, github...
 	UID               string `gorm:"column:uid"`
 	EncryptedPassword string
@@ -35,6 +36,10 @@ func (basic Basic) ToClaims() *claims.Claims {
 	claims := claims.Claims{}
 	claims.Provider = basic.Provider
 	claims.Id = basic.UID
-	claims.UserID = *basic.UserID
+	if basic.UserID == nil {
+		log.Println("WARN auth_identity provider", basic.ID, "has no UserID")
+	} else {
+		claims.UserID = *basic.UserID
+	}
 	return &claims
 }
