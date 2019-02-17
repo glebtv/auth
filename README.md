@@ -27,7 +27,7 @@ import (
   "github.com/glebtv/auth/providers/password"
   "github.com/glebtv/auth/providers/facebook"
   "github.com/glebtv/auth/providers/twitter"
-  "github.com/qor/session/manager"
+  "rscz.ru/rs/sessionmanager"
 
   _ "github.com/mattn/go-sqlite3"
 
@@ -82,7 +82,7 @@ func main() {
 
   // Mount Auth to Router
   mux.Handle("/auth/", Auth.NewServeMux())
-  http.ListenAndServe(":9000", manager.SessionManager.Middleware(mux))
+  http.ListenAndServe(":9000", sessionmanager.SessionManager.Middleware(mux))
 }
 ```
 

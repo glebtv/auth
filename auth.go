@@ -5,14 +5,14 @@ import (
 	"strings"
 
 	jwt "github.com/dgrijalva/jwt-go"
-	"github.com/jinzhu/gorm"
 	"github.com/glebtv/auth/auth_identity"
 	"github.com/glebtv/auth/claims"
+	"github.com/jinzhu/gorm"
 	"github.com/qor/mailer"
 	"github.com/qor/mailer/logger"
 	"github.com/qor/redirect_back"
 	"github.com/qor/render"
-	"github.com/qor/session/manager"
+	"rscz.ru/rs/sessionmanager"
 )
 
 // Auth auth struct
@@ -88,14 +88,14 @@ func New(config *Config) *Auth {
 	if config.SessionStorer == nil {
 		config.SessionStorer = &SessionStorer{
 			SessionName:    "_auth_session",
-			SessionManager: manager.SessionManager,
+			SessionManager: sessionmanager.SessionManager,
 			SigningMethod:  jwt.SigningMethodHS256,
 		}
 	}
 
 	if config.Redirector == nil {
 		config.Redirector = &Redirector{redirect_back.New(&redirect_back.Config{
-			SessionManager:  manager.SessionManager,
+			SessionManager:  sessionmanager.SessionManager,
 			IgnoredPrefixes: []string{config.URLPrefix},
 		})}
 	}
