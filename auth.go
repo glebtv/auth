@@ -4,13 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/glebtv/auth/auth_identity"
 	"github.com/glebtv/auth/claims"
+	"github.com/glebtv/redirect_back"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/mailer"
 	"github.com/qor/mailer/logger"
-	"github.com/qor/redirect_back"
 	"github.com/qor/render"
 	"rscz.ru/rs/sessionmanager"
 )
@@ -86,11 +85,12 @@ func New(config *Config) *Auth {
 	}
 
 	if config.SessionStorer == nil {
-		config.SessionStorer = &SessionStorer{
-			SessionName:    "_auth_session",
-			SessionManager: sessionmanager.SessionManager,
-			SigningMethod:  jwt.SigningMethodHS256,
-		}
+		panic("auth: session storer is required")
+		//config.SessionStorer = &SessionStorer{
+		//SessionName:    "_auth_session",
+		//SessionManager: sessionmanager.SessionManager,
+		//SigningMethod:  jwt.SigningMethodHS256,
+		//}
 	}
 
 	if config.Redirector == nil {

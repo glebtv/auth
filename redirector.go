@@ -3,7 +3,7 @@ package auth
 import (
 	"net/http"
 
-	"github.com/qor/redirect_back"
+	"github.com/glebtv/redirect_back"
 )
 
 // RedirectorInterface redirector interface
