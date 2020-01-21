@@ -20,6 +20,6 @@ type Redirector struct {
 
 // Redirect redirect back after action
 func (redirector Redirector) Redirect(w http.ResponseWriter, req *http.Request, action string) {
-	log.Println("redirect back", action)
+	log.Println("redirect back to action", action)
 	redirector.RedirectBack.RedirectBack(w, req)
 }
