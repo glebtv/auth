@@ -2,6 +2,7 @@ package authority
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 
 	"github.com/glebtv/auth"
@@ -85,6 +86,7 @@ func (authority *Authority) Authorize(roles ...string) func(http.Handler) http.H
 // NewAccessDeniedHandler new access denied handler
 func NewAccessDeniedHandler(Auth AuthInterface, redirectPath string) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
+		log.Println("access denied", redirectPath)
 		Auth.Flash(w, req, session.Message{Message: AccessDeniedFlashMessage})
 		http.Redirect(w, req, redirectPath, http.StatusSeeOther)
 	}
