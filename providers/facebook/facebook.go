@@ -113,8 +113,8 @@ func New(config *Config) *FacebookProvider {
 				}
 
 				if _, userID, err := context.Auth.UserStorer.Save(&schema, context); err == nil {
-					if userID != "" {
-						authInfo.UserID = userID
+					if userID != 0 {
+						authInfo.UserID = &userID
 					}
 				} else {
 					return nil, err

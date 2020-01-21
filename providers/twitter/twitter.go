@@ -8,10 +8,10 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/mrjones/oauth"
 	"github.com/glebtv/auth"
 	"github.com/glebtv/auth/auth_identity"
 	"github.com/glebtv/auth/claims"
+	"github.com/mrjones/oauth"
 	"github.com/qor/qor/utils"
 	"github.com/qor/session"
 )
@@ -109,8 +109,8 @@ func New(config *Config) *Provider {
 			}
 
 			if _, userID, err := context.Auth.UserStorer.Save(&schema, context); err == nil {
-				if userID != "" {
-					authInfo.UserID = userID
+				if userID != 0 {
+					authInfo.UserID = &userID
 				}
 			} else {
 				return nil, err
